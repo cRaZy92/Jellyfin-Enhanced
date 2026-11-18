@@ -262,6 +262,7 @@
     "extras/plugin-revisions.js",
     "extras/theme-selector.js",
     "extras/active-streams.js",
+    "extras/watching-avatars.js",
     "extras/activity-page.js",
     "extras/activity-custom-tab.js",
 

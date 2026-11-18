@@ -683,6 +683,13 @@ JEAdmin.define({
                 { id: 'activeStreamsAllUsers', prop: 'ActiveStreamsAllUsers', type: 'toggle', label: 'Show widget to non-admins' }
             ]
         },
+        'extras-watching': {
+            title: 'Watching Avatars', icon: 'group',
+            items: [
+                { id: 'watchingAvatarsEnabled', prop: 'WatchingAvatarsEnabled', type: 'toggle', main: true, label: 'Show who is watching on posters',
+                  desc: 'Shows the avatars of users who are currently watching a movie or episode on its poster in Jellyfin Web, including the season and series posters. Every signed-in user can see who is watching items they have access to.' }
+            ]
+        },
         'extras-links': {
             title: 'External Links', icon: 'link',
             items: [

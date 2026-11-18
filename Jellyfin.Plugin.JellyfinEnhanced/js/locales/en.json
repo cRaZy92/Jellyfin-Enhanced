@@ -1284,6 +1284,8 @@
     "hidden_content_experimental_label": "Experimental",
     "active_streams_count": "{count} Active Stream|{count} Active Streams",
     "active_streams_none": "No Active Streams",
+    "watching_avatars_watching": "{name} is watching",
+    "watching_avatars_paused": "{name} paused",
     "activity_title": "Activity",
     "activity_verb_watched": "watched",
     "activity_verb_completed_watching": "completed watching",

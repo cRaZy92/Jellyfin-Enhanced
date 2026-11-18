@@ -392,6 +392,7 @@ namespace Jellyfin.Plugin.JellyfinEnhanced.Configuration
             CustomPluginLinks = "";
             ActiveStreamsEnabled = false;
             ActiveStreamsAllUsers = false;
+            WatchingAvatarsEnabled = false;
             ActivityFeedEnabled = false;
             ActivityFeedShowWatched = true;
             ActivityFeedShowFavorited = true;
@@ -1271,6 +1272,9 @@ namespace Jellyfin.Plugin.JellyfinEnhanced.Configuration
         public string CustomPluginLinks { get; set; }
         public bool ActiveStreamsEnabled { get; set; }
         public bool ActiveStreamsAllUsers { get; set; }
+
+        /// <summary>Shows every signed-in user who is watching what, as avatars on posters in Jellyfin Web.</summary>
+        public bool WatchingAvatarsEnabled { get; set; }
 
         // Activity Feed Settings -- server-wide "recent activity" tab (recently
         // watched, favorited, reviewed). Each entry is filtered per-viewer by

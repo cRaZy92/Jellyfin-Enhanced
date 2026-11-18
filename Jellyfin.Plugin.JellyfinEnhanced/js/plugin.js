@@ -1174,6 +1174,7 @@
         ['dashboard', 'initializeActivityIcons', (c) => c.ColoredActivityIconsEnabled],
         ['dashboard', 'initializePluginIcons', (c) => c.PluginIconsEnabled],
         ['active-streams', 'activeStreams.initialize', (c) => c.ActiveStreamsEnabled],
+        ['watching-avatars', 'watchingAvatars.initialize', (c) => c.WatchingAvatarsEnabled],
         ['requests-page', 'initializeDownloadsPage', (c) => c.DownloadsPageEnabled],
         ['calendar-page', 'initializeCalendarPage', (c) => c.CalendarPageEnabled],
         ['hidden-content-page', 'initializeHiddenContentPage', (c) => c.HiddenContentEnabled],
@@ -1365,7 +1366,8 @@
         // page's "Test custom links" uses the plugin-icons module either way.
         'dashboard': { needed: isDashboardRoute },
         'theme-selector': { needed: () => !!(JE.pluginConfig || {}).ThemeSelectorEnabled },
-        'active-streams': { needed: () => !!(JE.pluginConfig || {}).ActiveStreamsEnabled }
+        'active-streams': { needed: () => !!(JE.pluginConfig || {}).ActiveStreamsEnabled },
+        'watching-avatars': { needed: () => !!(JE.pluginConfig || {}).WatchingAvatarsEnabled }
     };
 
     /**

@@ -391,6 +391,13 @@
             ]
         },
         {
+            "id": "watching-avatars",
+            "note": "Who is watching avatars on posters. Loaded at boot when enabled.",
+            "modules": [
+                "extras/watching-avatars.js"
+            ]
+        },
+        {
             "id": "activity-page",
             "note": "The Activity page.",
             "modules": [

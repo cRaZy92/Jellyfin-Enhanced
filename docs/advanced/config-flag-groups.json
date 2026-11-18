@@ -428,6 +428,7 @@
     "UseIcons": "Icons & Theme",
     "WatchProgressDefaultMode": "UI Preferences",
     "WatchProgressTimeFormat": "UI Preferences",
+    "WatchingAvatarsEnabled": "Watching Avatars",
     "WatchlistMemoryRetentionDays": "Watchlist",
     "WatchlistRemovalSync": "Watchlist"
   },
@@ -850,6 +851,7 @@
     "UseIcons": "Use Icons in UI",
     "WatchProgressDefaultMode": "Watch Progress Default",
     "WatchProgressTimeFormat": "Watch Progress Time Format",
+    "WatchingAvatarsEnabled": "Show who is watching on posters",
     "WatchlistMemoryRetentionDays": "Remember removed items for (days)",
     "WatchlistRemovalSync": "When an item is removed from a watchlist"
   },
@@ -1282,6 +1284,7 @@
     "UseIcons": "Display",
     "WatchProgressDefaultMode": "Display",
     "WatchProgressTimeFormat": "Display",
+    "WatchingAvatarsEnabled": "Extras",
     "WatchlistMemoryRetentionDays": "Seerr",
     "WatchlistRemovalSync": "Seerr"
   },
@@ -1801,6 +1804,7 @@
     "VideoCodecTagOrder": 5,
     "WatchProgressDefaultMode": "percentage",
     "WatchProgressTimeFormat": "hours",
+    "WatchingAvatarsEnabled": false,
     "WatchlistMemoryRetentionDays": 365,
     "WatchlistRemovalSync": "jellyfin"
   }

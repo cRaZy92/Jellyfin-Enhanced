@@ -4,7 +4,7 @@ Use Jellyfin Enhanced (JE)'s API to manage bookmarks, reviews, and personal sett
 
 To use these APIs from a custom Jellyfin client, you need an HTTP client and a Jellyfin credential. You do not need the injected JE scripts.
 
-This reference covers the 224 method/path entries in plugin version **12.14.0.0**. Use the endpoint tables to check access requirements, inputs, responses, and limits.
+This reference covers the 225 method/path entries in plugin version **12.14.0.0**. Use the endpoint tables to check access requirements, inputs, responses, and limits.
 
 Paths in endpoint tables are relative to `/JellyfinEnhanced/`. Braces mark path parameters; replace them before making a request. The catch-all routes serve only the resources described below.
 
@@ -1558,7 +1558,7 @@ Neither configuration endpoint exposes provider API keys. `TmdbEnabled` and `Mdb
     | `JellyseerrShowDetailPageLinkAsText`, `JellyseerrExcludeLibraryItems`, `JellyseerrExcludeBlocklistedItems`, `JellyseerrDisableCache`, `BookmarksEnabled`, `BookmarksUsePluginPages`, `BookmarksUseCustomTabs`, `BookmarksUseNativeTab` | Boolean |
     | `ArrLinksEnabled`, `ShowArrLinksAsText`, `ArrLinksShowStatusSingle`, `ArrTagsSyncEnabled`, `ArrTagsShowAsLinks`, `AudioLanguageTagSyncEnabled`, `AudioLanguageTagShowAsLinks`, `LetterboxdEnabled` | Boolean |
     | `ShowLetterboxdLinkAsText`, `MetadataIconsEnabled`, `UseIcons`, `ColoredRatingsEnabled`, `ThemeSelectorEnabled`, `ColoredActivityIconsEnabled`, `PluginIconsEnabled`, `EnableLoginImage` | Boolean |
-    | `ActiveStreamsEnabled`, `ActiveStreamsAllUsers`, `AnalyticsEnabled`, `AnalyticsShareUsageCounts`, `DownloadsPageEnabled`, `DownloadsPageShowIssues`, `ShowDownloadsInRequests`, `DownloadsUsePluginPages` | Boolean |
+    | `ActiveStreamsEnabled`, `ActiveStreamsAllUsers`, `WatchingAvatarsEnabled`, `AnalyticsEnabled`, `AnalyticsShareUsageCounts`, `DownloadsPageEnabled`, `DownloadsPageShowIssues`, `ShowDownloadsInRequests`, `DownloadsUsePluginPages` | Boolean |
     | `DownloadsUseCustomTabs`, `DownloadsUseNativeTab`, `DownloadsPagePollingEnabled`, `DownloadsFilterByUserRequests`, `DownloadsShowHistory`, `DownloadsHistoryAdminOnly`, `CalendarPageEnabled`, `CalendarUseCustomTabs` | Boolean |
     | `CalendarUsePluginPages`, `CalendarUseNativeTab`, `CalendarHighlightFavorites`, `CalendarHighlightWatchedSeries`, `CalendarFilterByLibraryAccess`, `CalendarShowOnlyRequested`, `CalendarForceOnlyRequested`, `RecommendationsPageEnabled` | Boolean |
     | `RecommendationsUseCustomTabs`, `RecommendationsUseNativeTab`, `ActivityFeedEnabled`, `ActivityFeedUseCustomTabs`, `ActivityFeedUseNativeTab`, `ActivityFeedShowWatched`, `ActivityFeedShowFavorited`, `ActivityFeedShowReviewed` | Boolean |
@@ -1868,11 +1868,13 @@ Read now-playing sessions or send an administrator message to sessions with usab
 |---|---|---|
 | **Active Streams Header Widget** | `false` | `ActiveStreamsEnabled`; disabled sessions/broadcast return `503`. |
 | **Show widget to non-admins** | `false` | `ActiveStreamsAllUsers`; allows viewer session reads, otherwise `403`. |
+| **Show who is watching on posters** | `false` | `WatchingAvatarsEnabled`; disabled `watching-now` returns `503`. |
 
 | Method | Path | Access | Contract |
 |---|---|---|---|
 | GET | `active-streams/sessions` | Administrator, or authenticated with viewer setting enabled | Bare now-playing session array. |
 | POST | `active-streams/broadcast` | Administrator | `{Header,Text,TimeoutMs}` → `{sent,skipped,errors}`. |
+| GET | `watching-now` | Authenticated | `{viewers:[{userId,userName,hasImage,isPaused,itemIds}]}` for movies, episodes and videos the caller can access. |
 | GET | `proxy/avatar` | Authenticated | Query `path` → cached raster image bytes. |
 | GET | `items/by-providers` | Authenticated | Query provider dictionary and optional `types` → one matching GUID the caller can see. |
 
@@ -2025,7 +2027,7 @@ These are resource URLs, separate from Jellyfin web hash navigation or placement
 
 ## Full Endpoint Index
 
-The endpoint tables above enumerate all 224 controller method/path entries, including the three catch-all templates. Each group documents effective access, inputs, response shape, and limits; shared proxy rows intentionally retain the configured upstream service's JSON contract.
+The endpoint tables above enumerate all 225 controller method/path entries, including the three catch-all templates. Each group documents effective access, inputs, response shape, and limits; shared proxy rows intentionally retain the configured upstream service's JSON contract.
 
 For implementation details, [JellyfinEnhancedController.cs](https://github.com/n00bcodr/Jellyfin-Enhanced/blob/main/Jellyfin.Plugin.JellyfinEnhanced/Controllers/JellyfinEnhancedController.cs) implements all indexed routes except `catchup/*`, which is in [CatchUpController.cs](https://github.com/n00bcodr/Jellyfin-Enhanced/blob/main/Jellyfin.Plugin.JellyfinEnhanced/Controllers/CatchUpController.cs). These upstream source links may advance beyond this versioned reference.
 

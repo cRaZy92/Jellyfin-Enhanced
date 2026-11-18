@@ -489,6 +489,7 @@ The editor stores `TagStyleOverrides=""` until a group or tag colour is saved, t
 | `js/elsewhere/reviews.js` | TMDB and JE user reviews. Review visibility uses the shared author policy; Spoiler Guard suppression of this web panel is client behavior. |
 | `js/awards/awards.js` | Details-page awards banner, backed by `Services/WikidataAwardsService.cs` and `Model/AwardsData.cs`. Authenticated `GET /JellyfinEnhanced/awards/{mediaType}/{tmdbId}` supports `movie`, `tv`, `person`; Wikidata needs no API key. Server results are cached. |
 | `js/extras/active-streams.js` | Active stream header widget and session details. |
+| `js/extras/watching-avatars.js` | Live avatars on the posters of items users are watching. |
 | `js/extras/colored-activity-icons.js`, `colored-ratings.js` | Colored activity icons and detail-page parental-rating backgrounds. |
 | `js/extras/plugin-icons.js` | Dashboard plugin icons and custom configuration-page links. |
 | `js/extras/plugin-revisions.js` | Hides repeated version rows within each plugin-detail revision list, retaining the first. Catalog compatibility filtering remains upstream; React nodes/install handlers and package responses are preserved. No dedicated setting. |

@@ -4333,6 +4333,7 @@ namespace Jellyfin.Plugin.JellyfinEnhanced.Controllers
                 config.EnableLoginImage,
                 config.ActiveStreamsEnabled,
                 config.ActiveStreamsAllUsers,
+                config.WatchingAvatarsEnabled,
                 config.AnalyticsEnabled,
                 config.AnalyticsShareUsageCounts,
 
@@ -11981,6 +11982,81 @@ namespace Jellyfin.Plugin.JellyfinEnhanced.Controllers
                 });
 
             return sessions.ToList<object>();
+        }
+
+        // ==================== Watching Avatars ====================
+
+        /// <summary>
+        /// Who is watching what right now, for the avatars on posters. Open to every
+        /// signed-in user while the setting is on, so it returns identity and item ids
+        /// only, and only for items the caller can access.
+        /// </summary>
+        [HttpGet("watching-now")]
+        [Authorize]
+        public IActionResult GetWatchingNow()
+        {
+            var config = JellyfinEnhanced.Instance?.Configuration;
+            if (config == null || !config.WatchingAvatarsEnabled)
+                return StatusCode(503, "Watching Avatars is not enabled.");
+
+            var callerId = UserHelper.GetCurrentUserId(User);
+            var caller = callerId is { } id && id != Guid.Empty ? _userManager.GetUserById(id) : null;
+            if (caller == null)
+                return Unauthorized();
+
+            Response.Headers.CacheControl = "no-store";
+            try
+            {
+                return Ok(new { viewers = BuildWatchingNow(caller) });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to get watching-now sessions: {ex.Message}");
+                return StatusCode(500, "Failed to retrieve sessions.");
+            }
+        }
+
+        private List<object> BuildWatchingNow(Jellyfin.Database.Implementations.Entities.User caller)
+        {
+            var access = new Dictionary<Guid, bool>();
+            bool CanAccess(Guid itemId)
+            {
+                if (!access.TryGetValue(itemId, out var allowed))
+                {
+                    // Through the user: library access, parental rating and blocked tags apply.
+                    allowed = _libraryManager.GetItemById<BaseItem>(itemId, caller) != null;
+                    access[itemId] = allowed;
+                }
+
+                return allowed;
+            }
+
+            return _sessionManager.Sessions
+                .Where(s => s.UserId != Guid.Empty
+                    && s.NowPlayingItem is { } item
+                    && item.Type is Jellyfin.Data.Enums.BaseItemKind.Movie
+                        or Jellyfin.Data.Enums.BaseItemKind.Episode
+                        or Jellyfin.Data.Enums.BaseItemKind.Video
+                    && CanAccess(item.Id))
+                .GroupBy(s => (s.UserId, s.NowPlayingItem!.Id))
+                .Select(group =>
+                {
+                    var first = group.First();
+                    var item = first.NowPlayingItem!;
+                    return (object)new
+                    {
+                        userId = first.UserId.ToString("N"),
+                        userName = first.UserName,
+                        hasImage = first.UserPrimaryImageTag != null,
+                        isPaused = group.All(s => s.PlayState?.IsPaused == true),
+                        itemIds = new Guid?[] { item.Id, item.SeasonId, item.SeriesId }
+                            .Where(itemId => itemId.HasValue && itemId.Value != Guid.Empty)
+                            .Select(itemId => itemId!.Value.ToString("N"))
+                            .Distinct()
+                            .ToList()
+                    };
+                })
+                .ToList();
         }
 
         [HttpPost("active-streams/broadcast")]

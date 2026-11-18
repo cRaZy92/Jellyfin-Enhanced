@@ -1547,6 +1547,10 @@
       "category": "js"
     },
     {
+      "path": "Jellyfin.Plugin.JellyfinEnhanced/js/extras/watching-avatars.js",
+      "category": "js"
+    },
+    {
       "path": "Jellyfin.Plugin.JellyfinEnhanced/js/jellyseerr/api.js",
       "category": "js"
     },
@@ -3822,6 +3826,15 @@
       "verb": "GET",
       "path": "/JellyfinEnhanced/active-streams/sessions",
       "method": "GetActiveSessions",
+      "file": "Jellyfin.Plugin.JellyfinEnhanced/Controllers/JellyfinEnhancedController.cs",
+      "following_attributes": [
+        "Authorize"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/JellyfinEnhanced/watching-now",
+      "method": "GetWatchingNow",
       "file": "Jellyfin.Plugin.JellyfinEnhanced/Controllers/JellyfinEnhancedController.cs",
       "following_attributes": [
         "Authorize"
@@ -6997,6 +7010,14 @@
     {
       "class": "PluginConfiguration",
       "name": "ActiveStreamsAllUsers",
+      "type": "bool",
+      "initializer": null,
+      "constructor_assignment": "false",
+      "file": "Jellyfin.Plugin.JellyfinEnhanced/Configuration/PluginConfiguration.cs"
+    },
+    {
+      "class": "PluginConfiguration",
+      "name": "WatchingAvatarsEnabled",
       "type": "bool",
       "initializer": null,
       "constructor_assignment": "false",
@@ -10983,9 +11004,9 @@
   ],
   "counts": {
     "build_targets": 2,
-    "files": 502,
-    "routes": 224,
-    "configuration_properties": 788,
+    "files": 503,
+    "routes": 225,
+    "configuration_properties": 789,
     "storage_references": 91,
     "scheduled_tasks": 17,
     "locales": 33
