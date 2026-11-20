@@ -63,6 +63,24 @@ test('draws an avatar on the matching card only, after the hover overlay', async
   assert.equal(hosts[0].querySelector('.je-watching-avatar').getAttribute('aria-label'), 'adam is watching');
 });
 
+test('steps aside for Jellyfin\'s card buttons while the card is active', async t => {
+  const h = setup(t, { html: card(MOVIE) + card(OTHER), responses: [{ viewers: [viewer('adam', [MOVIE, OTHER])] }] });
+  await h.start();
+  const [focused, revealed] = h.document.querySelectorAll('.card');
+  const style = el => h.window.getComputedStyle(el);
+  const avatarOf = c => c.querySelector('.je-watching-avatar');
+  assert.notEqual(style(h.host(focused)).opacity, '0');
+  assert.equal(style(avatarOf(focused)).pointerEvents, 'auto');
+
+  focused.querySelector('.cardImageContainer').setAttribute('href', '#');
+  focused.querySelector('.cardImageContainer').focus();
+  revealed.classList.add('je-tag-reveal');
+  for (const c of [focused, revealed]) {
+    assert.equal(style(h.host(c)).opacity, '0');
+    assert.equal(style(avatarOf(c)).pointerEvents, 'none');
+  }
+});
+
 test('matches dashed upper-case ids and data-itemid cards', async t => {
   const dashed = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
   const h = setup(t, { html: card(dashed) + card(SERIES, 'data-itemid'), responses: [{ viewers: [viewer('adam', [MOVIE, SERIES])] }] });

@@ -12,6 +12,9 @@
     const RENDER_DEBOUNCE_MS = 250;
     const MAX_VISIBLE = 3;
     const ITEM_ID = /^[a-f0-9]{32}$/;
+    // A hovered or focused card, or one the poster tags revealed on touch
+    // (the same selector as js/tags/tag-layout-styles.js).
+    const ACTIVE_CARD = ':is(:is(.card, .listItem):is(:hover, :focus-within), .je-tag-reveal)';
 
     let running = false;
     let inFlight = false;
@@ -201,6 +204,11 @@
             .je-watching-avatar + .je-watching-more { margin-inline-start: -6px; }
             .je-watching-avatar img { width: 100%; height: 100%; object-fit: cover; }
             .je-watching-avatar.is-paused { filter: grayscale(0.7) brightness(0.65); }
+            /* Jellyfin's played, favourite and more buttons share the bottom of
+               an active card, so step aside as the poster tags do. */
+            .${HOST_CLASS} { transition: opacity 0.15s ease; }
+            ${ACTIVE_CARD} .${HOST_CLASS} { opacity: 0; }
+            ${ACTIVE_CARD} :is(.je-watching-avatar, .je-watching-more) { pointer-events: none; }
         `;
         document.head.appendChild(style);
     }
