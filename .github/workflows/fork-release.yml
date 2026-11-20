@@ -1,0 +1,140 @@
+name: Fork release
+
+# Builds this fork for Jellyfin 12 and 10.11 on every push to main, publishes
+# the two ZIPs as a GitHub release and lists them in manifest.json on the
+# `fork-manifest` branch, so Jellyfin can install and update the fork from
+#   https://raw.githubusercontent.com/<owner>/<repo>/fork-manifest/manifest.json
+# The manifest lives on its own branch so main never diverges from upstream's
+# manifest.json. Versions are upstream's AssemblyVersion with this workflow's
+# run number as the revision (12.16.0.<run>), so every build is an update.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'tests/**'
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fork-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # Forks only: upstream publishes through its own plugin catalog.
+    if: github.repository_owner != 'n00bcodr'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PROJECT: Jellyfin.Plugin.JellyfinEnhanced/JellyfinEnhanced.csproj
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73
+        with:
+          dotnet-version: |
+            9.0.x
+            10.0.x
+
+      - name: Pick version
+        id: version
+        run: |
+          base=$(grep -oP '(?<=<AssemblyVersion>)[0-9]+\.[0-9]+\.[0-9]+' "$PROJECT")
+          echo "version=${base}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Build both targets
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for pair in jf12:12.0.0 jf10:10.11.0; do
+            target=${pair%%:*}; abi=${pair#*:}
+            dotnet build "$PROJECT" -c Release \
+              -p:JellyfinTarget="$target" \
+              -p:AssemblyVersion="$VERSION" -p:FileVersion="$VERSION" \
+              --artifacts-path "artifacts/$target"
+            dll=$(find "artifacts/$target/bin" -name Jellyfin.Plugin.JellyfinEnhanced.dll | head -n1)
+            test -n "$dll"
+            zip -j "dist/Jellyfin.Plugin.JellyfinEnhanced_${abi}.zip" "$dll"
+          done
+          ls -l dist
+
+      - name: Publish release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          prev=$(git tag -l 'fork-*' --sort=-v:refname | head -n1)
+          if [ -n "$prev" ]; then
+            git log --no-merges --format='- %s' "$prev..HEAD" | head -n 40 > notes.md
+          else
+            git log --no-merges --format='- %s' -n 20 > notes.md
+          fi
+          gh release create "fork-$VERSION" dist/*.zip \
+            --target "$GITHUB_SHA" \
+            --title "$VERSION" \
+            --notes-file notes.md
+
+      - name: Update manifest
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git ls-remote --exit-code --heads origin fork-manifest >/dev/null; then
+            git fetch origin fork-manifest
+            git worktree add -B fork-manifest manifest-branch origin/fork-manifest
+          else
+            git worktree add --orphan -b fork-manifest manifest-branch
+          fi
+          python3 - <<'EOF'
+          import datetime, hashlib, json, os, pathlib
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          version = os.environ["VERSION"]
+          tag = f"fork-{version}"
+          out = pathlib.Path("manifest-branch/manifest.json")
+          notes = pathlib.Path("notes.md").read_text().strip()
+
+          if out.exists():
+              manifest = json.loads(out.read_text())
+          else:
+              # Same GUID as upstream, so the fork replaces an existing install and keeps its settings.
+              header = json.loads(pathlib.Path("manifest.json").read_text())[0]
+              header = {k: v for k, v in header.items() if k != "versions"}
+              header["owner"] = repo.split("/")[0]
+              header["name"] = "Jellyfin Enhanced"
+              manifest = [dict(header, versions=[])]
+
+          now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+          entries = []
+          for abi, label in (("12.0.0", "Jellyfin 12"), ("10.11.0", "Jellyfin 10.11")):
+              name = f"Jellyfin.Plugin.JellyfinEnhanced_{abi}.zip"
+              data = pathlib.Path("dist", name).read_bytes()
+              entries.append({
+                  "changelog": f"**Fork build for {label}.**\n\n{notes}",
+                  "targetAbi": f"{abi}.0",
+                  "version": version,
+                  "sourceUrl": f"https://github.com/{repo}/releases/download/{tag}/{name}",
+                  "checksum": hashlib.md5(data).hexdigest().upper(),
+                  "timestamp": now,
+              })
+
+          plugin = manifest[0]
+          plugin["versions"] = (entries + [v for v in plugin["versions"] if v["version"] != version])[:20]
+          out.write_text(json.dumps(manifest, indent=4) + "\n")
+          EOF
+          cd manifest-branch
+          git add manifest.json
+          git commit -m "chore(fork): manifest for $VERSION"
+          git push origin fork-manifest
