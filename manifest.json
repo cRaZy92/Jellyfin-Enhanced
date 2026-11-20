@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Jellyfin Enhanced",
+        "guid": "f69e946a-4b3c-4e9a-8f0a-8d7c1b2c4d9b",
+        "overview": "Jellyfin Enhanced and Jellyfin Elsewhere for a better Jellyfin experience.",
+        "description": "A combination of the Jellyfin Enhanced and Jellyfin Elsewhere userscripts, providing a comprehensive set of tweaks and features for Jellyfin.",
+        "owner": "cRaZy92",
+        "category": "General",
+        "imageUrl": "https://raw.githubusercontent.com/n00bcodr/Jellyfin-Enhanced/master/docs/images/icon.png",
+        "versions": [
+            {
+                "changelog": "**Fork build for Jellyfin 12.**\n\n- ci(fork): build releases and a plugin manifest for installing this fork from Jellyfin\n- feat(extras): show who is watching as live avatars on posters\n- feat(reclaimerr): approve a deletion request for later, with Reclaimerr's grace period, now, or a chosen day\n- fix(admintags): Media Tags confirmations no longer rebuild the configuration page (#1090)\n- perf: lighter Home screen with lazy feature bundles and cheaper tags (#1088)\n- feat(leaving-soon): request-style cards, sizes, and sturdier Reclaimerr request handling (#1089)\n- docs(api): document reclaimerr/create-users and bump the route total to 224\n- fix(activity): show season and episode for episodes in Active Streams\n- chore(tests): regenerate production inventory\n- feat(reclaimerr): create Reclaimerr accounts for Jellyfin users and show a person's own removal requests\n- docs: Open in Jellyfin page, docs restructure, and move the build to Zensical (#1086)\n- perf(tags): write the quality chip base CSS once instead of once per quality colour (374 KB to 26 KB)\n- fix(seerr): Filters pill and Series tab under Jellyfish, Zesty and JellyFlix themes (#1085)\n- feat(seerr): filters on Recommendations, filters in the page address, all or any, Without genres and language, saved filters (#1084)\n- fix(admin): keep Media Tags deep links when the address follows the open tab, update api.md route total and in-place link test\n- fix(seerr): let the discovery section span the full width on themes that grid .detailSection\n- chore(tests): regenerate production inventory\n- feat(admin): analytics icon on reported settings and tab/card in the config page address\n- fix(tests): update api.md route total and config flag groups for leaving soon\n- fix(seerr): keep the region in the search language so TMDB returns the right regional titles (#1082)",
+                "targetAbi": "12.0.0.0",
+                "version": "12.16.0.1",
+                "sourceUrl": "https://github.com/cRaZy92/Jellyfin-Enhanced/releases/download/fork-12.16.0.1/Jellyfin.Plugin.JellyfinEnhanced_12.0.0.zip",
+                "checksum": "8EC32CE4F55FE71EF5DFCDD16FE6E973",
+                "timestamp": "2026-11-20T19:16:48"
+            },
+            {
+                "changelog": "**Fork build for Jellyfin 10.11.**\n\n- ci(fork): build releases and a plugin manifest for installing this fork from Jellyfin\n- feat(extras): show who is watching as live avatars on posters\n- feat(reclaimerr): approve a deletion request for later, with Reclaimerr's grace period, now, or a chosen day\n- fix(admintags): Media Tags confirmations no longer rebuild the configuration page (#1090)\n- perf: lighter Home screen with lazy feature bundles and cheaper tags (#1088)\n- feat(leaving-soon): request-style cards, sizes, and sturdier Reclaimerr request handling (#1089)\n- docs(api): document reclaimerr/create-users and bump the route total to 224\n- fix(activity): show season and episode for episodes in Active Streams\n- chore(tests): regenerate production inventory\n- feat(reclaimerr): create Reclaimerr accounts for Jellyfin users and show a person's own removal requests\n- docs: Open in Jellyfin page, docs restructure, and move the build to Zensical (#1086)\n- perf(tags): write the quality chip base CSS once instead of once per quality colour (374 KB to 26 KB)\n- fix(seerr): Filters pill and Series tab under Jellyfish, Zesty and JellyFlix themes (#1085)\n- feat(seerr): filters on Recommendations, filters in the page address, all or any, Without genres and language, saved filters (#1084)\n- fix(admin): keep Media Tags deep links when the address follows the open tab, update api.md route total and in-place link test\n- fix(seerr): let the discovery section span the full width on themes that grid .detailSection\n- chore(tests): regenerate production inventory\n- feat(admin): analytics icon on reported settings and tab/card in the config page address\n- fix(tests): update api.md route total and config flag groups for leaving soon\n- fix(seerr): keep the region in the search language so TMDB returns the right regional titles (#1082)",
+                "targetAbi": "10.11.0.0",
+                "version": "12.16.0.1",
+                "sourceUrl": "https://github.com/cRaZy92/Jellyfin-Enhanced/releases/download/fork-12.16.0.1/Jellyfin.Plugin.JellyfinEnhanced_10.11.0.zip",
+                "checksum": "901B6D9DDE569CE7527CFAB7BA75C824",
+                "timestamp": "2026-11-20T19:16:48"
+            }
+        ]
+    }
+]
